@@ -1,0 +1,30 @@
+# Data
+02_data/raw/*
+02_data/processed/*
+!02_data/**/.gitkeep
+!02_data/README.md
+*.h5
+*.h5ad
+*.npz
+
+# Regenerable outputs
+04_results/*
+05_figures/*
+!04_results/.gitkeep
+!05_figures/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+env/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Orange3
+*.ows.bak
+
+# Office / OS
+~$*
+.DS_Store
+Thumbs.db

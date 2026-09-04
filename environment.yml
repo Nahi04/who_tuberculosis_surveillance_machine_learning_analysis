@@ -1,0 +1,17 @@
+name: aida-project
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - graphviz
+  - python-graphviz
+  - jupyterlab
+  - pip
+  - pip:
+      - pyagrum
