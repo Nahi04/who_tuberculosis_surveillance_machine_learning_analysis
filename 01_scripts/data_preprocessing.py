@@ -172,6 +172,32 @@ def encode_region(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ============================================================================
+# Fully-imputed countries report -- flags countries where a given variable
+# has NO real observation at all over the period covered (every value comes
+# from imputation). For that country, the column becomes a flat, artificial
+# constant (the regional median, repeated every year) -- fine for a generic
+# shared table (D7/D8), but each downstream use (clustering, prediction...)
+# decides for itself whether to drop that country for the variable(s) it
+# actually relies on.
+# ============================================================================
+def find_fully_imputed_countries(df: pd.DataFrame, numeric_cols: list[str]) -> dict[str, list[str]]:
+    """Returns {column: [countries]} for every numeric column that has an
+    "<col>_is_imputed" flag, listing countries where that flag is 1 on every
+    row (i.e. not a single real value across the whole period covered by df).
+    Pass a train+test concatenation to check the full period."""
+    report = {}
+    for col in numeric_cols:
+        flag_col = f"{col}_is_imputed"
+        if flag_col not in df.columns:
+            continue
+        always_imputed = df.groupby("country")[flag_col].mean()
+        countries = sorted(always_imputed[always_imputed == 1].index.tolist())
+        if countries:
+            report[col] = countries
+    return report
+
+
+# ============================================================================
 # Optional, downstream transforms (D4) -- NOT applied automatically.
 # Call only for distance-based methods (PCA, k-means, hierarchical
 # clustering, KNN). Skip them entirely for tree-based models.
